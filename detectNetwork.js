@@ -13,31 +13,60 @@ var detectNetwork = function(cardNumber) {
   // The American Express network always starts with a 34 or 37 and is 15 digits long
 
   // Once you've read this, go ahead and try to implement this function, then return to the console.
+  //DoneV1
 
-  //diners club
-  let firstTwoLetters = cardNumber.slice(0,2)
-  let length = cardNumber.length
-  let isLength16or19 = length === 16 || length === 19
+  var firstTwo = cardNumber.slice(0,2)
+  var firstThree = cardNumber.slice(0,3)
+  var length = cardNumber.length
+  var isLength16or19 = length === 16 || length === 19
+  var firstFour = cardNumber.slice(0,4)
+  var firstSix = cardNumber.slice(0,6)
+  var visaOrSwitch = {'cardtype' : 0 /* card length */}
 
 
 
-  if ((firstTwoLetters === '38' || firstTwoLetters === '39')  && length === 14 ){
+  if ((firstTwo === '38' || firstTwo === '39')  && length === 14 ){
     return "Diner's Club"
   }
-  if ((cardNumber.slice(0,1) === '4')  && (length === 13 || length === 16 || length === 19)){
-    return "Visa"
+  if ((firstTwo === '34' || firstTwo === '37')  && length === 15 ){
+    return "American Express"
   }
-  if ((firstTwoLetters === '51' || firstTwoLetters === '52'|| firstTwoLetters === '53'|| firstTwoLetters === '54'|| firstTwoLetters === '55') && length === 16 ){
+  if ((cardNumber.slice(0,1) === '4')  && (length === 13 || length === 16 || length === 19)){
+    if(
+      // Switch always has a prefix of 4903, 4905, 4911, 4936, 564182, 633110, 6333, or 6759 and a length of 16, 18, or 19.
+      firstFour === '4903' || firstFour === '4905' || firstFour === '4911' || firstFour === '4936')
+    {return 'Switch'}
+    else {
+      return "Visa"}
+  }
+
+
+  if ((firstTwo === '51' || firstTwo === '52'|| firstTwo === '53'|| firstTwo === '54'|| firstTwo === '55') && length === 16 ){
     return "MasterCard"
   }
-  if ((cardNumber.slice(0,5) === '6011')  && isLength16or19){
+  if ((firstFour === '6011'|| firstTwo === "65" || firstThree === "644" || firstThree === "645" || firstThree === "646" || firstThree === "647"|| firstThree === "648" || firstThree === "649")  && isLength16or19){
     return "Discover"
   }
-  if ((cardNumber.slice(0,5) === '5018'|| cardNumber.slice(0,5) === '5020')  && isLength16or19){
+  if ((firstFour === '5018' || firstFour === '5020' || firstFour === '5038' || firstFour === '6304')  && (length === 12 || length === 13 || length === 14 || length === 15 || length === 16 || length === 17 || length === 18 || length === 19 )) {
     return "Maestro"
   }
 
-  //american Express
+  if (
+     // prefix: 622126 - 622925, 624-626, 6282-6288, lengths of 16 - 19
+    ( (parseInt(firstSix) >= 622126 && parseInt(firstSix) <= 622925) ||
+      (parseInt(firstFour) >= 6282 && parseInt(firstFour) <= 6288) ||
+      (parseInt(firstThree) >= 624 && parseInt(firstThree) <= 626) )
+      && (length > 15 && length < 20)
+   )
+  {
+    return "China UnionPay"
+  }
+  if(
+    // Switch always has a prefix of 4903, 4905, 4911, 4936, 564182, 633110, 6333, or 6759 and a length of 16, 18, or 19.
+    (firstFour === '4903' || firstFour === '4905' || firstFour === '4911'|| firstFour === '4936'|| firstFour === '6333'|| firstFour === '6759' || firstSix === '564182' || firstSix === '633110')
+    && (length === 16 || length === 18 || length === 19 )
+   )
+  {return 'Switch'}
 
 
 };
